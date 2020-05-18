@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+
+{% block body %}
+
+<div class="my-3 d-flex justify-content-end">
+  <a href="/registration" class="btn btn-secondary">Register</a>
+</div>
+<h1>Login</h1>
+
+{% if message is defined and message|length %}
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+{% endif %}
+
+<form action="/do_login" method="POST">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="username" name="username">
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" name="password">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

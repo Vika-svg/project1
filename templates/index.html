@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Project1
+{% endblock %}
+
+
+{% block body %}
+<h1>Welcome {{userName}}, to Vikas book store :-)</h1>
+<form action="/search" method="post">
+  <div class="form-group">
+    <input type="text" class="form-control" name="isbn" placeholder="Enter a ISBN number">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+<form>
+{% endblock %}

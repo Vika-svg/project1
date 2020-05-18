@@ -1,0 +1,21 @@
+Tables
+
+User
+- id
+- name
+- username
+- password
+
+Book
+- id
+- title
+- author
+- year
+- isbn
+
+Review
+- id
+- bookId
+- userId
+- review
+- score
