@@ -44,11 +44,21 @@ def search():
     if session.get("user_id") is None:
         return redirect("/login")
 
-    isbn = request.form.get("isbn") 
-    # 1. read what was sent us (isbn, title or author)
+    # 1. read what was sent to us (isbn, title or author)
+    query = request.form.get("query") 
     # 2. query the DB and get results
+    look_for = '%{0}%'.format(query)
+    results = Book.query.filter(Book.title.ilike(look_for)| Book.author.ilike(look_for)| Book.isbn.ilike(look_for)).all()
     # 3. return a search_results.html file which should be passed to the template engine together with the fetched data
-    return render_template("search_results.html", isbn=isbn)
+    return render_template("search_results.html", results=results, query=query)
+
+@app.route("/books/<string:isbn>")
+def book(isbn):
+    # Make sure book exists
+    book = Book.query.get(isbn)
+    # Fetch reviews for book
+    reviews = Review.query.filter_by(book_isbn=isbn).all()
+    return render_template("book.html", book=book, reviews=reviews)
 
 @app.route("/login")
 def login():

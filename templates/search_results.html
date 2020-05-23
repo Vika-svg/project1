@@ -6,7 +6,16 @@ Search_result
 
 
 {% block body %}
-<h1>Search</h1>
-    <p>Results for:</p>
-    {{isbn}}
+<h1>Search results</h1>
+    <p> {{results |length}} results for "{{query}}":</p>
+    {% if results | length == 0 %} 
+        <p>Sorry, your request was not successful</p>
+    {% endif %}
+    <ul>
+        {% for book in results %}
+            <li>
+                 <a href="{{ url_for('book', isbn=book.isbn) }}">Title: {{book.title}}, Author: {{book.author}}, ISBN: {{book.isbn}}</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Project1
+{% endblock %}
+
+
+{% block body %}
+<h1>{{book.title}}</h1>
+<p>Author: {{book.author}}</p>
+<p>Publication year: {{book.year}}</p>
+<p>ISBN: {{book.isbn}}</p>
+
+<h3>Reviews:</h3>
+{% if reviews | length == 0 %} 
+<p>Sorry, there are no reviews, yet.</p>
+{% endif %}
+
+{% endblock %}
