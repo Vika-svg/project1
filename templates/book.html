@@ -14,6 +14,53 @@ Project1
 <h3>Reviews:</h3>
 {% if reviews | length == 0 %} 
 <p>Sorry, there are no reviews, yet.</p>
+{% else %}
+<ul>
+    {% for review in reviews %}
+        <li>
+            {{review.review}}, {{review.rating}}
+        </li>
+    {% endfor %}
+</ul>
 {% endif %}
+
+<form action="/review" method="POST"> 
+    <input type="hidden" name="isbn" value="{{book.isbn}}">
+    <div class="form-group">
+      <label for="review">Write your own review</label>
+      <textarea class="form-control" name="review" rows="3"></textarea>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating1" value="1">
+        <label class="form-check-label" for="rating1">
+          1
+        </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating2" value="2">
+        <label class="form-check-label" for="rating2">
+          2
+        </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating3" value="3" checked>
+        <label class="form-check-label" for="rating3">
+          3
+        </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating4" value="4">
+        <label class="form-check-label" for="rating4">
+          4
+        </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
+        <label class="form-check-label" for="rating5">
+          5
+        </label>
+    </div>
+    <div><button type="submit" class="btn btn-primary">Submit</button></div>
+</form>
 
 {% endblock %}

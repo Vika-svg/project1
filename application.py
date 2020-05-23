@@ -60,14 +60,33 @@ def book(isbn):
     reviews = Review.query.filter_by(book_isbn=isbn).all()
     return render_template("book.html", book=book, reviews=reviews)
 
+@app.route("/review", methods=["POST"])
+def review():
+     # 1. read data sent from client
+    isbn = request.form.get("isbn")
+    review = request.form.get("review")
+    rating = request.form.get("rating")
+    user_id = session.get("user_id")
+
+     # 2. Users should not be able to submit multiple reviews for the same book.
+    existing_review = Review.query.filter_by(book_isbn=isbn,  user_id=user_id).first()
+    if existing_review is not None: 
+        return render_template("review_error.html")
+
+     # 3. create a new review object
+    review = Review(user_id=user_id, book_isbn=isbn, review=review, rating=int(rating))
+
+    # 4. store that review object in the DB
+    db.session.add(review)
+    db.session.commit()
+    return redirect("/books/" + isbn) 
+
 @app.route("/login")
 def login():
     return render_template("login.html")
 
 @app.route("/do_login", methods=["POST"])
 def do_login():
-    # In terms of how to “log a user in,” recall that you can store information inside of the session, which can store different values for different users. In particular, if each user has an id, then you could store that id in the session (e.g., in session["user_id"]) to keep track of which user is currently logged in.
-
     # 1. read data sent from client: username and password
     username = request.form.get("username")
     password = request.form.get("password")
