@@ -68,7 +68,35 @@ def book(isbn):
     book = Book.query.get(isbn)
     # Fetch reviews for book
     reviews = Review.query.filter_by(book_isbn=isbn).all()
-    return render_template("book.html", book=book, reviews=reviews, goodreads_average_rating=goodreads_average_rating, goodreads_reviews_count=goodreads_reviews_count) 
+    return render_template("book.html", book=book, reviews=reviews, goodreads_average_rating=goodreads_average_rating, goodreads_reviews_count=goodreads_reviews_count)
+
+@app.route("/api/<string:isbn>")
+def api(isbn):
+    # Make sure book exists
+    book = Book.query.get(isbn)
+    if book is None:
+        return jsonify({"error": "Invalid request"}), 404
+    # Make request to Goodreads
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "ihn5YquU1DXQgEd9MotEA", "isbns":isbn})
+    
+    goodreads_average_rating = "N/A"
+    goodreads_reviews_count = "N/A"
+    if res.status_code == 200:
+        # {'books': [{'id': 29127, 'isbn': '0451450523', 'isbn13': '9780451450524', 'ratings_count': 86325, 'reviews_count': 188002, 'text_reviews_count': 3234, 'work_ratings_count': 92838, 'work_reviews_count': 200867, 'work_text_reviews_count': 4374, 'average_rating': '4.17'}]}
+        goodreads_review_resp = res.json()
+        goodreads_review = goodreads_review_resp["books"][0]
+        goodreads_average_rating = goodreads_review["average_rating"]
+        goodreads_reviews_count = goodreads_review["reviews_count"]
+
+    return jsonify({
+        "title": book.title,
+        "author": book.author,
+        "year": book.year,
+        "isbn": book.isbn,
+        "review_count": goodreads_reviews_count,
+        "average_score": goodreads_average_rating
+    })
+    
 
 @app.route("/review", methods=["POST"])
 def review():
